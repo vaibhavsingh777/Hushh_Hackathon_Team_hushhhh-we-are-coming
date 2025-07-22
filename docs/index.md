@@ -23,8 +23,7 @@ This project provides the programmable trust and consent layer you’ll use to b
 
    ```bash
    git clone https://github.com/YOUR_TEAM/Hushh_Hackathon_Team_Name.git
-   cd Hushh_Hackathon_Team_Name
-````
+   cd Hushh_Hackathon_Team_Name    ```
 
 2. **Implement your own sign-in system**
 
@@ -108,7 +107,7 @@ All agents should only act when they have:
 ## 📬 Questions or Clarifications?
 
 * DM the mentor assigned to your team
-* Ask in the official Discord (channel: `#hushh-hackathon`)
+* Ask in the Whatsapp Group (channel: `#hushh-hackathon`)
 * Use the `README.md` and `/docs/*.md` in this repo for architecture references
 
 ---
