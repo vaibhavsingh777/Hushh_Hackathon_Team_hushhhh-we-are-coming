@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Hushh Email Intelligence Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .category-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .category-count {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-details {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .email-list {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+        }
+
+        .email-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f3f4;
+            transition: background 0.2s ease;
+        }
+
+        .email-item:hover {
+            background: #f8f9fa;
+        }
+
+        .email-item:last-child {
+            border-bottom: none;
+        }
+
+        .email-subject {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .email-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .email-preview {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .email-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag-category {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .tag-priority {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .tag-confidence {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .status-message {
+            text-align: center;
+            font-weight: 500;
+            margin: 1rem 0;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .oauth-section {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .google-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .google-btn:hover {
+            background: #3367d6;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔒 Hushh Email Intelligence</h1>
+            <p>AI-Powered Email Categorization with Privacy First</p>
+        </div>
+
+        <!-- OAuth Section -->
+        <div id="oauth-section" class="card oauth-section">
+            <h2>🔐 Secure Authentication Required</h2>
+            <p style="margin: 1rem 0; color: #666;">
+                To analyze your emails with AI categorization, please authenticate with Google.
+                <br><strong>Your privacy is protected</strong> - we use encrypted processing and follow strict data protocols.
+            </p>
+            <button id="google-signin" class="google-btn">
+                📧 Sign in with Google
+            </button>
+        </div>
+
+        <!-- Processing Section -->
+        <div id="processing-section" class="card hidden">
+            <h2>🧠 Email Processing</h2>
+            <p>Start AI-powered email categorization and analysis</p>
+            
+            <div style="margin: 2rem 0;">
+                <label for="days-input" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                    Days to analyze:
+                </label>
+                <input type="number" id="days-input" value="30" min="1" max="365" 
+                       style="padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-size: 1rem; width: 120px;">
+            </div>
+            
+            <button id="process-emails" class="btn">
+                🚀 Start Email Analysis
+            </button>
+            
+            <div id="progress-section" class="hidden">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <div id="status-message" class="status-message">Initializing...</div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden">
+            <!-- Stats Overview -->
+            <div class="card">
+                <h2>📊 Processing Summary</h2>
+                <div id="stats-overview" class="stats-overview">
+                    <!-- Stats will be populated here -->
+                </div>
+            </div>
+
+            <!-- Category Overview -->
+            <div class="card">
+                <h2>🏷️ Email Categories</h2>
+                <p style="margin-bottom: 2rem; color: #666;">Click on any category to view emails</p>
+                <div id="categories-grid" class="grid">
+                    <!-- Categories will be populated here -->
+                </div>
+            </div>
+
+            <!-- Email List -->
+            <div id="email-list-section" class="card hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 id="email-list-title">📧 Emails</h2>
+                    <button id="back-to-categories" class="btn-secondary">← Back to Categories</button>
+                </div>
+                <div id="email-list" class="email-list">
+                    <!-- Emails will be populated here -->
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <h2>⚡ Actions</h2>
+                <div style="text-align: center;">
+                    <button id="refresh-processing" class="btn">🔄 Refresh Analysis</button>
+                    <button id="clear-data" class="btn-danger">🗑️ Clear All Data</button>
+                    <button id="logout" class="btn-secondary">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = 'http://localhost:8000';
+        let authToken = null;
+        let currentUser = null;
+        let categorizedEmails = [];
+        let categoryStats = {};
+
+        // DOM Elements
+        const oauthSection = document.getElementById('oauth-section');
+        const processingSection = document.getElementById('processing-section');
+        const resultsSection = document.getElementById('results-section');
+        const emailListSection = document.getElementById('email-list-section');
+        const progressSection = document.getElementById('progress-section');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+            document.getElementById('process-emails').addEventListener('click', processEmails);
+            document.getElementById('back-to-categories').addEventListener('click', showCategories);
+            document.getElementById('refresh-processing').addEventListener('click', processEmails);
+            document.getElementById('clear-data').addEventListener('click', clearAllData);
+            document.getElementById('logout').addEventListener('click', logout);
+        }
+
+        function checkAuthStatus() {
+            const token = localStorage.getItem('jwt_token');
+            const email = localStorage.getItem('user_email');
+            
+            if (token && email) {
+                authToken = token;
+                currentUser = { email };
+                showProcessingSection();
+                
+                // Check if we have existing processed data
+                const existingEmails = localStorage.getItem('hushh_categorized_emails');
+                if (existingEmails) {
+                    categorizedEmails = JSON.parse(existingEmails);
+                    const existingStats = localStorage.getItem('hushh_category_stats');
+                    if (existingStats) {
+                        categoryStats = JSON.parse(existingStats);
+                    }
+                    showResults();
+                }
+            }
+        }
+
+        function handleGoogleSignIn() {
+            // Redirect to OAuth
+            window.location.href = `${API_BASE}/auth/google/redirect`;
+        }
+
+        function showProcessingSection() {
+            oauthSection.classList.add('hidden');
+            processingSection.classList.remove('hidden');
+        }
+
+        function showResults() {
+            processingSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+            emailListSection.classList.add('hidden');
+            
+            renderStats();
+            renderCategories();
+        }
+
+        function showCategories() {
+            emailListSection.classList.add('hidden');
+            resultsSection.classList.remove('hidden');
+        }
+
+        async function processEmails() {
+            const days = document.getElementById('days-input').value || 30;
+            const processBtn = document.getElementById('process-emails');
+            const progressFill = document.getElementById('progress-fill');
+            const statusMessage = document.getElementById('status-message');
+            
+            try {
+                processBtn.disabled = true;
+                processBtn.textContent = '🔄 Processing...';
+                progressSection.classList.remove('hidden');
+                
+                // Start processing
+                const response = await makeAuthenticatedRequest(`/api/emails/process/${days}`, {
+                    method: 'POST'
+                });
+                
+                if (!response.task_id) {
+                    throw new Error('Failed to start email processing');
+                }
+                
+                // Track progress
+                await trackProgress(response.task_id, progressFill, statusMessage);
+                
+                // Get final results
+                await loadCategorizedEmails();
+                showResults();
+                
+            } catch (error) {
+                console.error('Email processing failed:', error);
+                showError(`Processing failed: ${error.message}`);
+            } finally {
+                processBtn.disabled = false;
+                processBtn.textContent = '🚀 Start Email Analysis';
+                progressSection.classList.add('hidden');
+            }
+        }
+
+        async function trackProgress(taskId, progressFill, statusMessage) {
+            let attempts = 0;
+            const maxAttempts = 120; // 2 minutes max
+            
+            while (attempts < maxAttempts) {
+                try {
+                    const status = await makeAuthenticatedRequest(`/api/processing/status/${taskId}`);
+                    
+                    progressFill.style.width = `${status.percentage}%`;
+                    statusMessage.textContent = status.message;
+                    
+                    if (status.status === 'completed') {
+                        statusMessage.textContent = '✅ Processing completed!';
+                        break;
+                    } else if (status.status === 'error') {
+                        throw new Error(status.message);
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    attempts++;
+                    
+                } catch (error) {
+                    console.error('Progress tracking error:', error);
+                    break;
+                }
+            }
+        }
+
+        async function loadCategorizedEmails() {
+            try {
+                const response = await makeAuthenticatedRequest('/api/emails/categorized');
+                
+                if (response.success) {
+                    categorizedEmails = response.emails;
+                    categoryStats = response.stats;
+                    
+                    // Store in localStorage for persistence
+                    localStorage.setItem('hushh_categorized_emails', JSON.stringify(categorizedEmails));
+                    localStorage.setItem('hushh_category_stats', JSON.stringify(categoryStats));
+                }
+                
+            } catch (error) {
+                console.error('Failed to load categorized emails:', error);
+            }
+        }
+
+        function renderStats() {
+            const statsContainer = document.getElementById('stats-overview');
+            const totalEmails = categorizedEmails.length;
+            const totalCategories = Object.keys(categoryStats.categories || {}).length;
+            const highPriority = categorizedEmails.filter(e => e.importance === 'high').length;
+            const automationReady = categorizedEmails.filter(e => e.automation_ready).length;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-value">${totalEmails}</span>
+                    <div class="stat-label">📧 Total Emails</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${totalCategories}</span>
+                    <div class="stat-label">🏷️ Categories Found</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${highPriority}</span>
+                    <div class="stat-label">🔥 High Priority</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${automationReady}</span>
+                    <div class="stat-label">⚡ Automation Ready</div>
+                </div>
+            `;
+        }
+
+        function renderCategories() {
+            const categoriesGrid = document.getElementById('categories-grid');
+            const categories = categoryStats.categories || {};
+            
+            categoriesGrid.innerHTML = '';
+            
+            Object.entries(categories).forEach(([category, count]) => {
+                const categoryEmails = categorizedEmails.filter(e => e.category === category);
+                const highPriority = categoryEmails.filter(e => e.importance === 'high').length;
+                const automationReady = categoryEmails.filter(e => e.automation_ready).length;
+                
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.innerHTML = `
+                    <div class="category-count">${count}</div>
+                    <div class="category-name">${getCategoryEmoji(category)} ${category}</div>
+                    <div class="category-details">
+                        ${highPriority} high priority<br>
+                        ${automationReady} automation ready
+                    </div>
+                `;
+                
+                categoryCard.addEventListener('click', () => showEmailsForCategory(category));
+                categoriesGrid.appendChild(categoryCard);
+            });
+        }
+
+        function showEmailsForCategory(category) {
+            const categoryEmails = categorizedEmails.filter(e => e.category === category);
+            const emailListTitle = document.getElementById('email-list-title');
+            const emailList = document.getElementById('email-list');
+            
+            emailListTitle.textContent = `📧 ${getCategoryEmoji(category)} ${category} Emails (${categoryEmails.length})`;
+            
+            emailList.innerHTML = '';
+            
+            if (categoryEmails.length === 0) {
+                emailList.innerHTML = '<div class="email-item">No emails found in this category.</div>';
+            } else {
+                categoryEmails.forEach(email => {
+                    const emailItem = document.createElement('div');
+                    emailItem.className = 'email-item';
+                    emailItem.innerHTML = `
+                        <div class="email-subject">${email.subject}</div>
+                        <div class="email-meta">
+                            <span>From: ${email.sender}</span>
+                            <span>${new Date(email.received_date).toLocaleDateString()}</span>
+                        </div>
+                        <div class="email-preview">${email.body_preview || 'No preview available'}</div>
+                        <div class="email-tags">
+                            <span class="tag tag-category">${category}</span>
+                            <span class="tag tag-confidence">${Math.round(email.confidence * 100)}% confidence</span>
+                            ${email.importance === 'high' ? '<span class="tag tag-priority">🔥 High Priority</span>' : ''}
+                            ${email.automation_ready ? '<span class="tag tag-category">⚡ Automation Ready</span>' : ''}
+                        </div>
+                    `;
+                    emailList.appendChild(emailItem);
+                });
+            }
+            
+            resultsSection.classList.add('hidden');
+            emailListSection.classList.remove('hidden');
+        }
+
+        function getCategoryEmoji(category) {
+            const emojis = {
+                work: '💼',
+                finance: '💰',
+                personal: '👤',
+                shopping: '🛒',
+                newsletter: '📰',
+                travel: '✈️',
+                health: '🏥',
+                education: '📚',
+                social: '👥',
+                entertainment: '🎬',
+                uncategorized: '📁'
+            };
+            return emojis[category] || '📁';
+        }
+
+        async function clearAllData() {
+            if (!confirm('Are you sure you want to clear all email data? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                await makeAuthenticatedRequest('/api/data/delete', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data_types: ['emails'] })
+                });
+                
+                // Clear local storage
+                localStorage.removeItem('hushh_categorized_emails');
+                localStorage.removeItem('hushh_category_stats');
+                
+                categorizedEmails = [];
+                categoryStats = {};
+                
+                showProcessingSection();
+                showSuccess('All email data cleared successfully!');
+                
+            } catch (error) {
+                showError(`Failed to clear data: ${error.message}`);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('jwt_token');
+            localStorage.removeItem('user_email');
+            localStorage.removeItem('hushh_categorized_emails');
+            localStorage.removeItem('hushh_category_stats');
+            
+            authToken = null;
+            currentUser = null;
+            categorizedEmails = [];
+            categoryStats = {};
+            
+            oauthSection.classList.remove('hidden');
+            processingSection.classList.add('hidden');
+            resultsSection.classList.add('hidden');
+            emailListSection.classList.add('hidden');
+        }
+
+        async function makeAuthenticatedRequest(endpoint, options = {}) {
+            if (!authToken) {
+                throw new Error('No authentication token available');
+            }
+            
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            const response = await fetch(`${API_BASE}${endpoint}`, config);
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                    throw new Error('Authentication expired. Please sign in again.');
+                }
+                throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            }
+            
+            return response.json();
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error fade-in';
+            errorDiv.textContent = `❌ ${message}`;
+            
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success fade-in';
+            successDiv.textContent = `✅ ${message}`;
+            
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        // Handle OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('token')) {
+            authToken = urlParams.get('token');
+            const email = urlParams.get('email');
+            
+            localStorage.setItem('jwt_token', authToken);
+            localStorage.setItem('user_email', email);
+            
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            currentUser = { email };
+            showProcessingSection();
+        }
+    </script>
+</body>
+</html>

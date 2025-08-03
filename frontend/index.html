@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hushh PDA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .google-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .google-btn:hover {
+            background: #3367d6;
+        }
+        
+        .dashboard {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .dashboard.active {
+            display: grid;
+        }
+        
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .process-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .process-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .process-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .progress {
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .progress.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .status {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .sample-emails, .sample-events {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+        
+        .sample-email, .sample-event {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+        }
+        
+        .sample-email:last-child, .sample-event:last-child {
+            margin-bottom: 0;
+        }
+        
+        .sample-email strong, .sample-event strong {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .sample-email small, .sample-event small {
+            color: #6c757d;
+            font-size: 0.85em;
+        }
+        
+        .user-info {
+            color: white;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Hushh PDA</h1>
+            <p>Personal Data Assistant with AI-powered insights</p>
+        </div>
+
+        <!-- Authentication Section -->
+        <div id="auth-section" class="auth-section">
+            <h2>Sign in to continue</h2>
+            <p>Connect your Google account to analyze your data securely</p>
+            <br>
+            <button id="google-signin" class="google-btn">
+                📧 Sign in with Google
+            </button>
+        </div>
+
+        <!-- User Info (hidden initially) -->
+        <div id="user-info" class="user-info" style="display: none;">
+            <span id="user-email"></span>
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+
+        <!-- Dashboard (hidden initially) -->
+        <div id="dashboard" class="dashboard">
+            <!-- Email Processing Card -->
+            <div class="card">
+                <h3>📧 Email Analysis</h3>
+                <p>Analyze and categorize your emails with AI</p>
+                
+                <div class="input-group">
+                    <label for="email-days">Days to analyze:</label>
+                    <input type="number" id="email-days" value="30" min="1" max="365">
+                </div>
+                
+                <button id="process-emails" class="process-btn">
+                    Process Emails
+                </button>
+                
+                <div id="email-progress" class="progress">
+                    <div class="progress-bar">
+                        <div id="email-progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="email-status" class="status">Processing...</div>
+                </div>
+                
+                <div id="email-results" class="results"></div>
+            </div>
+
+            <!-- Calendar Processing Card -->
+            <div class="card">
+                <h3>📅 Calendar Analysis</h3>
+                <p>Analyze your calendar patterns and productivity</p>
+                
+                <div class="input-group">
+                    <label for="calendar-days-back">Days back:</label>
+                    <input type="number" id="calendar-days-back" value="30" min="1" max="365">
+                </div>
+                
+                <div class="input-group">
+                    <label for="calendar-days-forward">Days forward:</label>
+                    <input type="number" id="calendar-days-forward" value="30" min="1" max="365">
+                </div>
+                
+                <button id="process-calendar" class="process-btn">
+                    Process Calendar
+                </button>
+                
+                <div id="calendar-progress" class="progress">
+                    <div class="progress-bar">
+                        <div id="calendar-progress-fill" class="progress-fill"></div>
+                    </div>
+                    <div id="calendar-status" class="status">Processing...</div>
+                </div>
+                
+                <div id="calendar-results" class="results"></div>
+            </div>
+
+            <!-- Consent Management Card -->
+            <div class="card">
+                <h3>🔐 Privacy & Consent</h3>
+                <p>Manage your data permissions and privacy settings</p>
+                
+                <div class="consent-section">
+                    <h4>Active Permissions:</h4>
+                    <div id="active-consents" class="consent-list"></div>
+                    
+                    <button id="refresh-consents" class="secondary-btn">🔄 Refresh</button>
+                </div>
+                
+                <div class="data-section">
+                    <h4>Data Management:</h4>
+                    <div class="data-actions">
+                        <button id="export-data" class="secondary-btn">📤 Export My Data</button>
+                        <button id="delete-emails" class="danger-btn">🗑️ Delete Email Data</button>
+                        <button id="delete-calendar" class="danger-btn">🗑️ Delete Calendar Data</button>
+                        <button id="delete-all-data" class="danger-btn">⚠️ Delete All Data</button>
+                    </div>
+                </div>
+                
+                <div class="vault-section">
+                    <h4>🗄️ Vault Categories:</h4>
+                    <div id="vault-categories" class="categories-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let authToken = null;
+
+        // DOM elements
+        const authSection = document.getElementById('auth-section');
+        const userInfo = document.getElementById('user-info');
+        const dashboard = document.getElementById('dashboard');
+        const googleSigninBtn = document.getElementById('google-signin');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userEmailSpan = document.getElementById('user-email');
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            
+            googleSigninBtn.addEventListener('click', handleGoogleSignIn);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            document.getElementById('process-emails').addEventListener('click', processEmails);
+            document.getElementById('process-calendar').addEventListener('click', processCalendar);
+            document.getElementById('refresh-consents').addEventListener('click', loadActiveConsents);
+            document.getElementById('export-data').addEventListener('click', exportUserData);
+            document.getElementById('delete-emails').addEventListener('click', () => deleteUserData(['emails']));
+            document.getElementById('delete-calendar').addEventListener('click', () => deleteUserData(['calendar']));
+            document.getElementById('delete-all-data').addEventListener('click', () => deleteUserData(['all']));
+            
+            // Load initial data
+            loadActiveConsents();
+            loadVaultCategories();
+        });
+
+        function checkAuthStatus() {
+            const token = localStorage.getItem('jwt_token');
+            const email = localStorage.getItem('user_email');
+            
+            if (token && email) {
+                authToken = token;
+                showDashboard(email);
+            }
+        }
+
+        function handleGoogleSignIn() {
+            googleSigninBtn.disabled = true;
+            googleSigninBtn.textContent = 'Connecting...';
+            
+            // Redirect to OAuth
+            window.location.href = `${API_BASE}/auth/google/redirect`;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('jwt_token');
+            localStorage.removeItem('user_email');
+            authToken = null;
+            
+            authSection.style.display = 'block';
+            userInfo.style.display = 'none';
+            dashboard.classList.remove('active');
+        }
+
+        function showDashboard(email) {
+            authSection.style.display = 'none';
+            userInfo.style.display = 'block';
+            dashboard.classList.add('active');
+            userEmailSpan.textContent = email;
+        }
+
+        async function makeAuthenticatedRequest(endpoint, options = {}) {
+            const response = await fetch(`${API_BASE}${endpoint}`, {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    handleLogout();
+                    throw new Error('Authentication expired');
+                }
+                throw new Error(`API request failed: ${response.status}`);
+            }
+            
+            return response.json();
+        }
+
+        async function processEmails() {
+            const days = document.getElementById('email-days').value;
+            const btn = document.getElementById('process-emails');
+            const progress = document.getElementById('email-progress');
+            const progressFill = document.getElementById('email-progress-fill');
+            const status = document.getElementById('email-status');
+            const results = document.getElementById('email-results');
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Processing...';
+                progress.classList.add('active');
+                results.classList.remove('active');
+                progressFill.style.width = '0%';
+                status.textContent = 'Starting email processing...';
+                
+                // Start processing with real backend
+                const startResponse = await makeAuthenticatedRequest(`/api/emails/process/${days}`, {
+                    method: 'POST'
+                });
+                
+                if (!startResponse.task_id) {
+                    throw new Error('Failed to start email processing');
+                }
+                
+                // Track real progress
+                await trackEmailProgress(startResponse.task_id, progressFill, status, results);
+                
+            } catch (error) {
+                console.error('Email processing failed:', error);
+                progressFill.style.width = '100%';
+                status.textContent = 'Error occurred';
+                results.innerHTML = `<h4>❌ Processing Failed</h4><p>${error.message}</p>`;
+                results.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Process Emails';
+                setTimeout(() => progress.classList.remove('active'), 3000);
+            }
+        }
+        
+        async function trackEmailProgress(taskId, progressFill, status, results) {
+            let lastStatus = null;
+            
+            while (true) {
+                try {
+                    const statusResponse = await makeAuthenticatedRequest(`/api/processing/status/${taskId}`);
+                    
+                    // Update progress bar
+                    progressFill.style.width = `${statusResponse.percentage}%`;
+                    
+                    // Update status message with counts
+                    if (statusResponse.total > 0) {
+                        status.textContent = `${statusResponse.message} (${statusResponse.current}/${statusResponse.total})`;
+                    } else {
+                        status.textContent = statusResponse.message;
+                    }
+                    
+                    // Check if completed or failed
+                    if (statusResponse.status === 'completed') {
+                        status.textContent = 'Complete! ✅';
+                        
+                        // Get final results
+                        const finalResults = statusResponse.results;
+                        
+                        results.innerHTML = `
+                            <h4>✅ Email Processing Complete</h4>
+                            <p><strong>Processed:</strong> ${finalResults.processed_count} emails</p>
+                            <p><strong>Summary:</strong> ${finalResults.summary}</p>
+                            ${displayCategorySummary(finalResults.categories)}
+                            <div class="sample-emails">
+                                <h5>Sample Processed Emails:</h5>
+                                ${finalResults.emails.slice(0, 3).map(email => `
+                                    <div class="sample-email">
+                                        <strong>${email.subject}</strong><br>
+                                        <small>From: ${email.sender} | Category: ${email.category} | Priority: ${email.priority}</small>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        results.classList.add('active');
+                        break;
+                    } else if (statusResponse.status === 'error') {
+                        status.textContent = 'Error occurred ❌';
+                        results.innerHTML = `<h4>❌ Processing Failed</h4><p>${statusResponse.message}</p>`;
+                        results.classList.add('active');
+                        break;
+                    }
+                    
+                    // Wait before next status check
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                } catch (error) {
+                    console.error('Status check failed:', error);
+                    status.textContent = 'Status check failed';
+                    break;
+                }
+            }
+        }
+
+        async function processCalendar() {
+            const daysBack = document.getElementById('calendar-days-back').value;
+            const daysForward = document.getElementById('calendar-days-forward').value;
+            const btn = document.getElementById('process-calendar');
+            const progress = document.getElementById('calendar-progress');
+            const progressFill = document.getElementById('calendar-progress-fill');
+            const status = document.getElementById('calendar-status');
+            const results = document.getElementById('calendar-results');
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Processing...';
+                progress.classList.add('active');
+                results.classList.remove('active');
+                progressFill.style.width = '0%';
+                status.textContent = 'Starting calendar processing...';
+                
+                // Start processing with real backend
+                const startResponse = await makeAuthenticatedRequest(`/api/calendar/process/${daysBack}/${daysForward}`, {
+                    method: 'POST'
+                });
+                
+                if (!startResponse.task_id) {
+                    throw new Error('Failed to start calendar processing');
+                }
+                
+                // Track real progress
+                await trackCalendarProgress(startResponse.task_id, progressFill, status, results);
+                
+            } catch (error) {
+                console.error('Calendar processing failed:', error);
+                progressFill.style.width = '100%';
+                status.textContent = 'Error occurred';
+                results.innerHTML = `<h4>❌ Processing Failed</h4><p>${error.message}</p>`;
+                results.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Process Calendar';
+                setTimeout(() => progress.classList.remove('active'), 3000);
+            }
+        }
+        
+        async function trackCalendarProgress(taskId, progressFill, status, results) {
+            while (true) {
+                try {
+                    const statusResponse = await makeAuthenticatedRequest(`/api/processing/status/${taskId}`);
+                    
+                    // Update progress bar
+                    progressFill.style.width = `${statusResponse.percentage}%`;
+                    
+                    // Update status message with counts
+                    if (statusResponse.total > 0) {
+                        status.textContent = `${statusResponse.message} (${statusResponse.current}/${statusResponse.total})`;
+                    } else {
+                        status.textContent = statusResponse.message;
+                    }
+                    
+                    // Check if completed or failed
+                    if (statusResponse.status === 'completed') {
+                        status.textContent = 'Complete! ✅';
+                        
+                        const finalResults = statusResponse.results;
+                        
+                        results.innerHTML = `
+                            <h4>✅ Calendar Processing Complete</h4>
+                            <p><strong>Processed:</strong> ${finalResults.processed_count} events</p>
+                            <p><strong>Summary:</strong> ${finalResults.summary}</p>
+                            ${displayCategorySummary(finalResults.categories)}
+                            <div class="sample-events">
+                                <h5>Sample Processed Events:</h5>
+                                ${finalResults.events.slice(0, 3).map(event => `
+                                    <div class="sample-event">
+                                        <strong>${event.title}</strong><br>
+                                        <small>Category: ${event.category} | Priority: ${event.priority} | ${new Date(event.start_time).toLocaleDateString()}</small>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        results.classList.add('active');
+                        break;
+                    } else if (statusResponse.status === 'error') {
+                        status.textContent = 'Error occurred ❌';
+                        results.innerHTML = `<h4>❌ Processing Failed</h4><p>${statusResponse.message}</p>`;
+                        results.classList.add('active');
+                        break;
+                    }
+                    
+                    // Wait before next status check
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                } catch (error) {
+                    console.error('Status check failed:', error);
+                    status.textContent = 'Status check failed';
+                    break;
+                }
+            }
+        }
+
+        // Handle OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const email = urlParams.get('email');
+        
+        if (token && email) {
+            localStorage.setItem('jwt_token', token);
+            localStorage.setItem('user_email', email);
+            authToken = token;
+            showDashboard(email);
+            
+            // Clean URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Enhanced category display functions
+        function displayCategorySummary(categories) {
+            if (!categories || Object.keys(categories).length === 0) {
+                return '<div class="category-summary"><p>No categories found</p></div>';
+            }
+
+            const categoryItems = Object.entries(categories)
+                .sort(([,a], [,b]) => b - a)  // Sort by count descending
+                .map(([category, count]) => `
+                    <div class="category-item">
+                        <span class="category-name">${getCategoryEmoji(category)} ${category}</span>
+                        <span class="category-count">${count}</span>
+                    </div>
+                `).join('');
+
+            return `
+                <div class="category-summary">
+                    <h5>📊 Categories Found:</h5>
+                    <div class="category-list">
+                        ${categoryItems}
+                    </div>
+                </div>
+            `;
+        }
+
+        function getCategoryEmoji(category) {
+            const emojiMap = {
+                'work': '💼',
+                'personal': '👤',
+                'finance': '💰',
+                'health': '🏥',
+                'education': '📚',
+                'shopping': '🛒',
+                'travel': '✈️',
+                'entertainment': '🎬',
+                'social': '👥',
+                'communication': '💬',
+                'scheduling': '📅',
+                'documentation': '📄',
+                'general': '📋',
+                'uncategorized': '❓'
+            };
+            return emojiMap[category] || '📋';
+        }
+
+        function displayDetailedResults(items, type = 'email') {
+            if (!items || items.length === 0) {
+                return '<p>No items to display</p>';
+            }
+
+            const itemsHtml = items.slice(0, 10).map(item => `
+                <div class="result-item">
+                    <div class="item-header">
+                        <h6>${item.subject || item.title || 'No title'}</h6>
+                        <span class="category-badge ${item.category}">${getCategoryEmoji(item.category)} ${item.category}</span>
+                    </div>
+                    <p class="item-preview">${(item.preview || item.description || '').substring(0, 150)}...</p>
+                    <div class="item-actions">
+                        <button onclick="recategorizeItem('${item.id}', '${type}')" class="recategorize-btn">🏷️ Recategorize</button>
+                        <button onclick="addNote('${item.id}', '${type}')" class="note-btn">📝 Add Note</button>
+                        ${type === 'calendar' ? `<button onclick="scheduleEvent('${item.id}')" class="schedule-btn">⏰ Reschedule</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="detailed-results">
+                    <h5>📋 Recent ${type === 'email' ? 'Emails' : 'Events'} (showing first 10):</h5>
+                    ${itemsHtml}
+                    ${items.length > 10 ? `<p class="more-items">... and ${items.length - 10} more items</p>` : ''}
+                </div>
+            `;
+        }
+
+        // Interactive functions for category management
+        function recategorizeItem(itemId, type) {
+            const categories = ['work', 'personal', 'finance', 'health', 'education', 'shopping', 'travel', 'entertainment', 'social', 'communication', 'scheduling', 'documentation', 'general', 'uncategorized'];
+            
+            const categoryOptions = categories.map(cat => 
+                `<option value="${cat}">${getCategoryEmoji(cat)} ${cat}</option>`
+            ).join('');
+
+            const modal = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <h4>🏷️ Recategorize ${type === 'email' ? 'Email' : 'Event'}</h4>
+                        <select id="new-category">${categoryOptions}</select>
+                        <div class="modal-actions">
+                            <button onclick="applyRecategorization('${itemId}', '${type}')" class="confirm-btn">✅ Apply</button>
+                            <button onclick="closeModal()" class="cancel-btn">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+
+        function addNote(itemId, type) {
+            const modal = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <h4>📝 Add Note to ${type === 'email' ? 'Email' : 'Event'}</h4>
+                        <textarea id="note-text" placeholder="Enter your note..." rows="4" cols="50"></textarea>
+                        <div class="modal-actions">
+                            <button onclick="saveNote('${itemId}', '${type}')" class="confirm-btn">💾 Save Note</button>
+                            <button onclick="closeModal()" class="cancel-btn">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+
+        function scheduleEvent(eventId) {
+            const modal = `
+                <div class="modal-overlay" onclick="closeModal()">
+                    <div class="modal" onclick="event.stopPropagation()">
+                        <h4>⏰ Reschedule Event</h4>
+                        <input type="datetime-local" id="new-datetime" />
+                        <div class="modal-actions">
+                            <button onclick="applyReschedule('${eventId}')" class="confirm-btn">📅 Reschedule</button>
+                            <button onclick="closeModal()" class="cancel-btn">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modal);
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) modal.remove();
+        }
+
+        async function applyRecategorization(itemId, type) {
+            const newCategory = document.getElementById('new-category').value;
+            
+            try {
+                const result = await makeAuthenticatedRequest(`/api/${type}s/${itemId}/recategorize`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ category: newCategory })
+                });
+
+                closeModal();
+                alert(`✅ ${type === 'email' ? 'Email' : 'Event'} recategorized to ${newCategory}`);
+                
+                // Refresh the current view
+                if (type === 'email') {
+                    processEmails();
+                } else {
+                    processCalendar();
+                }
+            } catch (error) {
+                alert(`❌ Failed to recategorize: ${error.message}`);
+            }
+        }
+
+        async function saveNote(itemId, type) {
+            const noteText = document.getElementById('note-text').value;
+            
+            try {
+                const result = await makeAuthenticatedRequest(`/api/${type}s/${itemId}/note`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ note: noteText })
+                });
+
+                closeModal();
+                alert('✅ Note saved successfully');
+            } catch (error) {
+                alert(`❌ Failed to save note: ${error.message}`);
+            }
+        }
+
+        async function applyReschedule(eventId) {
+            const newDateTime = document.getElementById('new-datetime').value;
+            
+            try {
+                const result = await makeAuthenticatedRequest(`/api/calendar/${eventId}/reschedule`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ new_datetime: newDateTime })
+                });
+
+                closeModal();
+                alert('✅ Event rescheduled successfully');
+                processCalendar();
+            } catch (error) {
+                alert(`❌ Failed to reschedule: ${error.message}`);
+            }
+        }
+
+        // ==================== Consent Management Functions ====================
+
+        async function loadActiveConsents() {
+            try {
+                const consents = await makeAuthenticatedRequest('/api/consent/active');
+                displayActiveConsents(consents.consents || []);
+            } catch (error) {
+                console.error('Failed to load consents:', error);
+                document.getElementById('active-consents').innerHTML = 
+                    '<p class="error">Failed to load active permissions</p>';
+            }
+        }
+
+        function displayActiveConsents(consents) {
+            const container = document.getElementById('active-consents');
+            
+            if (consents.length === 0) {
+                container.innerHTML = '<p class="no-data">No active permissions found</p>';
+                return;
+            }
+
+            const consentsHtml = consents.map(consent => `
+                <div class="consent-item">
+                    <div class="consent-info">
+                        <strong>${getAgentDisplayName(consent.agent_id)}</strong>
+                        <span class="scope">${consent.scope}</span>
+                        <span class="expires">Expires: ${new Date(consent.expires_at).toLocaleDateString()}</span>
+                    </div>
+                    <button onclick="revokeConsent('${consent.agent_id}', '${consent.scope}')" 
+                            class="revoke-btn">🚫 Revoke</button>
+                </div>
+            `).join('');
+
+            container.innerHTML = consentsHtml;
+        }
+
+        function getAgentDisplayName(agentId) {
+            const agentNames = {
+                'agent_email_processor': '📧 Email Processor',
+                'agent_calendar_processor': '📅 Calendar Processor',
+                'agent_audit_logger': '📝 Audit Logger'
+            };
+            return agentNames[agentId] || agentId;
+        }
+
+        async function revokeConsent(agentId, scope) {
+            if (!confirm(`Are you sure you want to revoke permission for ${getAgentDisplayName(agentId)} to access ${scope}?`)) {
+                return;
+            }
+
+            try {
+                const result = await makeAuthenticatedRequest('/api/consent/revoke', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ agent_id: agentId, scope: scope })
+                });
+
+                alert('✅ Permission revoked successfully');
+                loadActiveConsents(); // Refresh the list
+            } catch (error) {
+                alert(`❌ Failed to revoke permission: ${error.message}`);
+            }
+        }
+
+        async function exportUserData() {
+            try {
+                const exportData = await makeAuthenticatedRequest('/api/data/export');
+                
+                // Create downloadable file
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `hushh-data-export-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('✅ Data exported successfully');
+            } catch (error) {
+                alert(`❌ Failed to export data: ${error.message}`);
+            }
+        }
+
+        async function deleteUserData(dataTypes) {
+            const typeNames = {
+                'emails': 'email data',
+                'calendar': 'calendar data',
+                'all': 'ALL DATA (including vault and consent history)'
+            };
+
+            const typesStr = dataTypes.map(type => typeNames[type] || type).join(', ');
+            
+            if (!confirm(`⚠️ WARNING: This will permanently delete your ${typesStr}. This action cannot be undone. Are you sure?`)) {
+                return;
+            }
+
+            if (dataTypes.includes('all')) {
+                const confirmText = prompt('To confirm deletion of ALL DATA, type "DELETE ALL" (case sensitive):');
+                if (confirmText !== 'DELETE ALL') {
+                    alert('Deletion cancelled - confirmation text did not match');
+                    return;
+                }
+            }
+
+            try {
+                const result = await makeAuthenticatedRequest('/api/data/delete', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data_types: dataTypes })
+                });
+
+                alert(`✅ Data deleted successfully: ${JSON.stringify(result.deleted_items)}`);
+                
+                // Refresh displays
+                loadActiveConsents();
+                loadVaultCategories();
+                
+                // Clear results
+                document.getElementById('email-results').innerHTML = '';
+                document.getElementById('calendar-results').innerHTML = '';
+                
+            } catch (error) {
+                alert(`❌ Failed to delete data: ${error.message}`);
+            }
+        }
+
+        async function loadVaultCategories() {
+            try {
+                // This would come from a vault categories endpoint
+                // For now, we'll show a placeholder
+                const container = document.getElementById('vault-categories');
+                container.innerHTML = `
+                    <div class="categories-summary">
+                        <p>📊 Your data categories will appear here after processing emails and calendar events</p>
+                        <div class="category-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">📧 Email Categories:</span>
+                                <span class="stat-value" id="email-category-count">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">📅 Calendar Categories:</span>
+                                <span class="stat-value" id="calendar-category-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Failed to load vault categories:', error);
+            }
+        }
+    </script>
+    
+    <style>
+    .category-summary {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 4px solid #4285f4;
+    }
+
+    .category-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .category-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem;
+        background: white;
+        border-radius: 5px;
+        border: 1px solid #e1e5e9;
+    }
+
+    .category-name {
+        font-weight: 500;
+    }
+
+    .category-count {
+        background: #4285f4;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .detailed-results {
+        margin-top: 1rem;
+    }
+
+    .result-item {
+        border: 1px solid #e1e5e9;
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: white;
+    }
+
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .category-badge {
+        padding: 0.2rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        background: #e3f2fd;
+        color: #1976d2;
+    }
+
+    .item-preview {
+        color: #666;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    .item-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .recategorize-btn, .note-btn, .schedule-btn {
+        padding: 0.3rem 0.8rem;
+        border: none;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .recategorize-btn {
+        background: #fff3e0;
+        color: #f57c00;
+    }
+
+    .note-btn {
+        background: #e8f5e8;
+        color: #2e7d32;
+    }
+
+    .schedule-btn {
+        background: #f3e5f5;
+        color: #7b1fa2;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .modal h4 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .modal select, .modal textarea, .modal input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .confirm-btn, .cancel-btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .confirm-btn {
+        background: #4285f4;
+        color: white;
+    }
+
+    .cancel-btn {
+        background: #f1f3f4;
+        color: #5f6368;
+    }
+
+    .more-items {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        margin-top: 1rem;
+    }
+
+    /* Consent Management Styles */
+    .consent-section, .data-section, .vault-section {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border: 1px solid #e1e5e9;
+        border-radius: 10px;
+        background: #f8f9fa;
+    }
+
+    .consent-list {
+        margin: 1rem 0;
+    }
+
+    .consent-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e1e5e9;
+    }
+
+    .consent-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .scope {
+        color: #666;
+        font-size: 0.9rem;
+        font-family: monospace;
+    }
+
+    .expires {
+        color: #999;
+        font-size: 0.8rem;
+    }
+
+    .revoke-btn {
+        background: #ff6b6b;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .revoke-btn:hover {
+        background: #ff5252;
+    }
+
+    .secondary-btn {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .secondary-btn:hover {
+        background: #5a6268;
+    }
+
+    .danger-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0.25rem;
+        font-size: 0.9rem;
+    }
+
+    .danger-btn:hover {
+        background: #c82333;
+    }
+
+    .data-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .categories-summary {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .category-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 8px;
+        border: 1px solid #e1e5e9;
+    }
+
+    .stat-label {
+        font-weight: 500;
+    }
+
+    .stat-value {
+        background: #4285f4;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-weight: bold;
+    }
+
+    .no-data {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 2rem;
+    }
+
+    .error {
+        color: #dc3545;
+        text-align: center;
+        padding: 1rem;
+    }
+    </style>
+</body>
+</html>

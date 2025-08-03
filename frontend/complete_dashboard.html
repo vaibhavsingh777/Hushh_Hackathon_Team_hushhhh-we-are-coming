@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 Hushh Complete Intelligence Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav-tab {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-tab.active,
+        .nav-tab:hover {
+            background: white;
+            color: #667eea;
+            border-color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            position: relative;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .category-card.active {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .category-count {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-sources {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .source-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .source-email {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .source-calendar {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .actions-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: none;
+        }
+
+        .category-card:hover .actions-panel {
+            display: block;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 0.25rem;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .email-list, .event-list {
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+        }
+
+        .item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f1f3f4;
+            transition: background 0.2s ease;
+        }
+
+        .item:hover {
+            background: #f8f9fa;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .processing-section {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .consent-section {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .google-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .revoke-section {
+            background: #ffebee;
+            border: 2px solid #ffcdd2;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔒 Hushh Complete Intelligence</h1>
+            <p>Unified AI-Powered Categorization & Automation</p>
+        </div>
+
+        <!-- Auth Section -->
+        <div id="auth-section" class="card consent-section">
+            <h2>🔐 Secure Authentication Required</h2>
+            <p>Authenticate to access your personal AI assistant with email and calendar intelligence.</p>
+            <button id="google-signin" class="google-btn">
+                📧 Sign in with Google
+            </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div id="nav-section" class="hidden">
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="dashboard">📊 Dashboard</div>
+                <div class="nav-tab" data-tab="email">📧 Email</div>
+                <div class="nav-tab" data-tab="calendar">📅 Calendar</div>
+                <div class="nav-tab" data-tab="actions">⚡ Actions</div>
+                <div class="nav-tab" data-tab="consent">🔒 Privacy</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content active hidden">
+            <div class="card">
+                <h2>📊 Unified Intelligence Dashboard</h2>
+                <p>Your emails and calendar events categorized and organized with AI</p>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button id="process-all" class="btn">🚀 Process All Data</button>
+                    <button id="refresh-data" class="btn-secondary">🔄 Refresh</button>
+                </div>
+                
+                <div id="processing-section" class="processing-section hidden">
+                    <div class="loading-spinner"></div>
+                    <div id="status-message">Processing your data...</div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unified Categories -->
+            <div id="categories-section" class="card hidden">
+                <h2>🏷️ Unified Categories</h2>
+                <p>Categories from both emails and calendar events</p>
+                <div id="categories-grid" class="grid">
+                    <!-- Categories will be populated here -->
+                </div>
+            </div>
+
+            <!-- Content View -->
+            <div id="content-view" class="card hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 id="content-title">📧 Content</h2>
+                    <button id="back-to-categories" class="btn-secondary">← Back</button>
+                </div>
+                
+                <!-- Filter Bar -->
+                <div id="content-filters" style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label style="font-weight: 500;">🔍 Type:</label>
+                        <select id="type-filter" style="padding: 0.25rem 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="all">All Items</option>
+                            <option value="emails">📧 Emails Only</option>
+                            <option value="events">📅 Events Only</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label style="font-weight: 500;">📅 Date:</label>
+                        <select id="date-filter" style="padding: 0.25rem 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <label style="font-weight: 500;">⚡ Priority:</label>
+                        <select id="priority-filter" style="padding: 0.25rem 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="all">All Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="normal">Normal Priority</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="text" id="search-filter" placeholder="🔍 Search content..." style="padding: 0.25rem 0.5rem; border: 1px solid #ddd; border-radius: 4px; min-width: 200px;">
+                        <button onclick="applyFilters()" style="padding: 0.25rem 0.75rem; border: 1px solid #2196f3; border-radius: 4px; background: #2196f3; color: white; cursor: pointer;">Apply</button>
+                        <button onclick="clearFilters()" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">Clear</button>
+                    </div>
+                </div>
+                
+                <div id="content-list">
+                    <!-- Content will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Tab -->
+        <div id="email-tab" class="tab-content hidden">
+            <div class="card">
+                <h2>📧 Email Intelligence</h2>
+                <div style="display: flex; gap: 1rem; align-items: center; margin: 2rem 0;">
+                    <label>Days to analyze:</label>
+                    <input type="number" id="email-days" value="30" min="1" max="365" class="form-control" style="width: 120px;">
+                    <button id="process-emails" class="btn">🚀 Process Emails</button>
+                </div>
+                <div id="email-stats"></div>
+            </div>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div id="calendar-tab" class="tab-content hidden">
+            <div class="card">
+                <h2>📅 Calendar Intelligence</h2>
+                <div style="display: flex; gap: 1rem; align-items: center; margin: 2rem 0; flex-wrap: wrap;">
+                    <label>Days back:</label>
+                    <input type="number" id="calendar-days-back" value="30" min="1" max="365" class="form-control" style="width: 120px;">
+                    <label>Days forward:</label>
+                    <input type="number" id="calendar-days-forward" value="30" min="1" max="365" class="form-control" style="width: 120px;">
+                    <button id="process-calendar" class="btn">🚀 Process Calendar</button>
+                </div>
+                <div id="calendar-stats"></div>
+            </div>
+        </div>
+
+        <!-- Actions Tab -->
+        <div id="actions-tab" class="tab-content hidden">
+            <div class="card">
+                <h2>⚡ Smart Actions</h2>
+                <p>Create events, notes, and automations based on your categories</p>
+                
+                <div class="grid">
+                    <div class="card" style="margin: 0;">
+                        <h3>📅 Schedule Event</h3>
+                        <button id="schedule-event-btn" class="btn">Create Event</button>
+                    </div>
+                    <div class="card" style="margin: 0;">
+                        <h3>📝 Create Note</h3>
+                        <button id="create-note-btn" class="btn">Create Note</button>
+                    </div>
+                    <div class="card" style="margin: 0;">
+                        <h3>🤖 Email Automation</h3>
+                        <button id="create-automation-btn" class="btn">Create Automation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consent/Privacy Tab -->
+        <div id="consent-tab" class="tab-content hidden">
+            <div class="card">
+                <h2>🔒 Privacy & Consent Management</h2>
+                <p>Manage your data and consent following Hushh MCP protocols</p>
+                
+                <div class="revoke-section">
+                    <h3>⚠️ Revoke Consent & Clear Data</h3>
+                    <p>This will permanently delete all categorized data and revoke processing consent. You will remain logged in.</p>
+                    <div style="margin: 1rem 0;">
+                        <button id="revoke-email" class="btn-danger">🗑️ Clear Email Data</button>
+                        <button id="revoke-calendar" class="btn-danger">🗑️ Clear Calendar Data</button>
+                        <button id="revoke-all" class="btn-danger">⚠️ Clear All Data</button>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button id="logout" class="btn-secondary">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals will be inserted here -->
+
+    <script>
+        // Configuration
+        const API_BASE = 'http://localhost:8000';
+        let authToken = null;
+        let currentUser = null;
+        let unifiedCategories = {};
+        let currentCategory = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Auth
+            document.getElementById('google-signin').addEventListener('click', handleGoogleSignIn);
+            document.getElementById('logout').addEventListener('click', logout);
+
+            // Navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Processing
+            document.getElementById('process-all').addEventListener('click', processAllData);
+            document.getElementById('refresh-data').addEventListener('click', loadUnifiedCategories);
+            document.getElementById('process-emails').addEventListener('click', processEmails);
+            document.getElementById('process-calendar').addEventListener('click', processCalendar);
+
+            // Navigation
+            document.getElementById('back-to-categories').addEventListener('click', showCategories);
+
+            // Actions
+            document.getElementById('schedule-event-btn').addEventListener('click', () => showScheduleEventModal());
+            document.getElementById('create-note-btn').addEventListener('click', () => showCreateNoteModal());
+            document.getElementById('create-automation-btn').addEventListener('click', () => showCreateAutomationModal());
+
+            // Consent revocation
+            document.getElementById('revoke-email').addEventListener('click', () => revokeConsent('email'));
+            document.getElementById('revoke-calendar').addEventListener('click', () => revokeConsent('calendar'));
+            document.getElementById('revoke-all').addEventListener('click', () => revokeConsent('all'));
+        }
+
+        function checkAuthStatus() {
+            const token = localStorage.getItem('jwt_token');
+            const email = localStorage.getItem('user_email');
+            
+            if (token && email) {
+                authToken = token;
+                currentUser = { email };
+                showMainInterface();
+                loadUnifiedCategories();
+            }
+        }
+
+        function handleGoogleSignIn() {
+            window.location.href = `${API_BASE}/auth/google/redirect`;
+        }
+
+        function showMainInterface() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('nav-section').classList.remove('hidden');
+            document.getElementById('dashboard-tab').classList.remove('hidden');
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        async function processAllData() {
+            const emailDays = 30;
+            const calendarDaysBack = 30;
+            const calendarDaysForward = 30;
+
+            showProcessing();
+
+            try {
+                // Process emails first
+                updateProcessingStatus("Processing emails...", 20);
+                const emailResult = await makeAuthenticatedRequest(`/api/emails/process/${emailDays}`, {
+                    method: 'POST'
+                });
+
+                if (emailResult.task_id) {
+                    await trackProgress(emailResult.task_id, 50);
+                }
+
+                // Process calendar
+                updateProcessingStatus("Processing calendar...", 60);
+                const calendarResult = await makeAuthenticatedRequest(`/api/calendar/process/${calendarDaysBack}/${calendarDaysForward}`, {
+                    method: 'POST'
+                });
+
+                if (calendarResult.task_id) {
+                    await trackProgress(calendarResult.task_id, 90);
+                }
+
+                updateProcessingStatus("Loading unified categories...", 95);
+                await loadUnifiedCategories();
+
+                hideProcessing();
+                showCategories();
+                showAlert('✅ All data processed successfully!', 'success');
+
+            } catch (error) {
+                console.error('Processing failed:', error);
+                hideProcessing();
+                showAlert(`❌ Processing failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function processEmails() {
+            const days = document.getElementById('email-days').value || 30;
+            
+            try {
+                const response = await makeAuthenticatedRequest(`/api/emails/process/${days}`, {
+                    method: 'POST'
+                });
+                
+                if (response.task_id) {
+                    showProcessing();
+                    await trackProgress(response.task_id, 100);
+                    hideProcessing();
+                    await loadUnifiedCategories();
+                    showAlert('✅ Email processing completed!', 'success');
+                }
+            } catch (error) {
+                console.error('Email processing failed:', error);
+                showAlert(`❌ Email processing failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function processCalendar() {
+            const daysBack = document.getElementById('calendar-days-back').value || 30;
+            const daysForward = document.getElementById('calendar-days-forward').value || 30;
+            
+            try {
+                const response = await makeAuthenticatedRequest(`/api/calendar/process/${daysBack}/${daysForward}`, {
+                    method: 'POST'
+                });
+                
+                if (response.task_id) {
+                    showProcessing();
+                    await trackProgress(response.task_id, 100);
+                    hideProcessing();
+                    await loadUnifiedCategories();
+                    showAlert('✅ Calendar processing completed!', 'success');
+                }
+            } catch (error) {
+                console.error('Calendar processing failed:', error);
+                showAlert(`❌ Calendar processing failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function trackProgress(taskId, maxPercentage) {
+            let attempts = 0;
+            const maxAttempts = 120;
+            
+            while (attempts < maxAttempts) {
+                try {
+                    const status = await makeAuthenticatedRequest(`/api/processing/status/${taskId}`);
+                    
+                    const percentage = Math.min(status.percentage, maxPercentage);
+                    updateProcessingStatus(status.message, percentage);
+                    
+                    if (status.status === 'completed' || status.status === 'error') {
+                        break;
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    attempts++;
+                    
+                } catch (error) {
+                    console.error('Progress tracking error:', error);
+                    break;
+                }
+            }
+        }
+
+        async function loadUnifiedCategories() {
+            try {
+                const response = await makeAuthenticatedRequest('/api/categories/unified');
+                
+                if (response.success) {
+                    unifiedCategories = response.categories;
+                    renderUnifiedCategories();
+                } else {
+                    // Handle case where API returns success: false
+                    console.log('No categories found:', response.message);
+                    showCategoriesMessage(response.message || 'No categorized data found. Please process emails and/or calendar first.');
+                }
+                
+            } catch (error) {
+                console.error('Failed to load unified categories:', error);
+                if (error.message.includes('Authentication')) {
+                    showCategoriesMessage('⚠️ Please sign in to view your categories');
+                } else {
+                    showCategoriesMessage('❌ Failed to load categories. Please try refreshing.');
+                }
+            }
+        }
+
+        function showCategoriesMessage(message) {
+            const categoriesGrid = document.getElementById('categories-grid');
+            const categoriesSection = document.getElementById('categories-section');
+            
+            categoriesSection.classList.remove('hidden');
+            categoriesGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 8px; border: 2px dashed #dee2e6;">
+                    <h3 style="color: #6c757d; margin: 0 0 1rem 0;">${message}</h3>
+                    <p style="color: #6c757d; margin: 0;">Process your emails and calendar to see categorized data here.</p>
+                </div>
+            `;
+        }
+
+        function renderUnifiedCategories() {
+            const categoriesGrid = document.getElementById('categories-grid');
+            const categoriesSection = document.getElementById('categories-section');
+            
+            categoriesGrid.innerHTML = '';
+            
+            if (!unifiedCategories || Object.keys(unifiedCategories).length === 0) {
+                showCategoriesMessage('📂 No categories found yet');
+                return;
+            }
+            
+            categoriesSection.classList.remove('hidden');
+            
+            Object.entries(unifiedCategories).forEach(([category, data]) => {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'category-card';
+                categoryCard.innerHTML = `
+                    <div class="category-count">${data.total}</div>
+                    <div class="category-name">${getCategoryEmoji(category)} ${category}</div>
+                    <div class="category-sources">
+                        ${data.sources.includes('email') ? '<span class="source-badge source-email">📧 Email (' + data.email_count + ')</span>' : ''}
+                        ${data.sources.includes('calendar') ? '<span class="source-badge source-calendar">📅 Calendar (' + data.calendar_count + ')</span>' : ''}
+                    </div>
+                    <div class="actions-panel">
+                        <button class="action-btn" onclick="showCategoryActions('${category}')" title="Actions">⚡</button>
+                        <button class="action-btn" onclick="scheduleEventForCategory('${category}')" title="Schedule Event">📅</button>
+                        <button class="action-btn" onclick="createNoteForCategory('${category}')" title="Create Note">📝</button>
+                    </div>
+                `;
+                
+                categoryCard.addEventListener('click', () => showCategoryContent(category));
+                categoriesGrid.appendChild(categoryCard);
+            });
+        }
+
+        async function showCategoryContent(category) {
+            currentCategory = category;
+            const categoryData = unifiedCategories[category];
+            
+            document.getElementById('content-title').textContent = `${getCategoryEmoji(category)} ${category} (${categoryData.total} items)`;
+            
+            const contentList = document.getElementById('content-list');
+            contentList.innerHTML = '<div id="loading-placeholder" style="text-align: center; padding: 2rem;"><div class="loading-spinner"></div><p>Loading category details...</p></div>';
+            
+            let itemsLoaded = 0;
+            
+            try {
+                // Clear the content list to start fresh
+                contentList.innerHTML = '';
+                
+                // Load emails for this category
+                if (categoryData.email_count > 0) {
+                    console.log(`📧 Loading ${categoryData.email_count} emails for category: ${category}`);
+                    const emailResponse = await makeAuthenticatedRequest(`/api/emails/categories/${category}`);
+                    console.log('Email response:', emailResponse);
+                    
+                    if (emailResponse.success && emailResponse.emails && emailResponse.emails.length > 0) {
+                        emailResponse.emails.forEach(email => {
+                            const emailItem = createEmailElement(email);
+                            contentList.appendChild(emailItem);
+                            itemsLoaded++;
+                        });
+                        console.log(`✅ Loaded ${emailResponse.emails.length} emails`);
+                    } else {
+                        console.warn('No emails found in response:', emailResponse);
+                    }
+                }
+                
+                // Load calendar events for this category
+                if (categoryData.calendar_count > 0) {
+                    console.log(`📅 Loading ${categoryData.calendar_count} events for category: ${category}`);
+                    const calendarResponse = await makeAuthenticatedRequest(`/api/calendar/categories/${category}`);
+                    console.log('Calendar response:', calendarResponse);
+                    
+                    if (calendarResponse.success && calendarResponse.events && calendarResponse.events.length > 0) {
+                        calendarResponse.events.forEach(event => {
+                            const eventItem = createEventElement(event);
+                            contentList.appendChild(eventItem);
+                            itemsLoaded++;
+                        });
+                        console.log(`✅ Loaded ${calendarResponse.events.length} events`);
+                    } else {
+                        console.warn('No events found in response:', calendarResponse);
+                    }
+                }
+                
+                // Show appropriate message if no items were loaded
+                if (itemsLoaded === 0) {
+                    contentList.innerHTML = `
+                        <div style="text-align: center; padding: 2rem;">
+                            <h3>📂 ${category}</h3>
+                            <p>No detailed items found for this category.</p>
+                            <p style="color: #666; font-size: 0.9em;">
+                                Expected: ${categoryData.email_count} emails, ${categoryData.calendar_count} events
+                            </p>
+                        </div>`;
+                } else {
+                    console.log(`✅ Successfully loaded ${itemsLoaded} items for category: ${category}`);
+                }
+                
+            } catch (error) {
+                console.error('Failed to load category content:', error);
+                contentList.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>❌ Failed to load category details</p><p style="color: #666; font-size: 0.9em;">' + error.message + '</p></div>';
+            }
+            
+            showContentView();
+        }
+
+        function createEmailElement(email) {
+            const emailDiv = document.createElement('div');
+            emailDiv.className = 'item';
+            emailDiv.style.cursor = 'pointer';
+            emailDiv.style.transition = 'all 0.2s ease';
+            
+            // Create a readable date
+            const date = new Date(email.received_date || email.date || Date.now());
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Truncate preview for better display
+            const preview = (email.body_preview || email.preview || email.body || 'No preview available');
+            const truncatedPreview = preview.length > 200 ? preview.substring(0, 200) + '...' : preview;
+            
+            emailDiv.innerHTML = `
+                <div class="item-title">📧 ${email.subject || 'No Subject'}</div>
+                <div class="item-meta">
+                    <span><strong>From:</strong> ${email.sender || email.from || 'Unknown Sender'}</span>
+                    <span><strong>Date:</strong> ${formattedDate}</span>
+                    ${email.thread_id ? `<span><strong>Thread:</strong> ${email.thread_id.substring(0, 8)}...</span>` : ''}
+                </div>
+                <div class="item-preview" style="margin: 1rem 0; color: #666; line-height: 1.4;">
+                    ${truncatedPreview}
+                </div>
+                <div class="item-tags">
+                    <span class="tag" style="background: #e3f2fd; color: #1976d2;">📂 ${email.category || 'uncategorized'}</span>
+                    <span class="tag" style="background: #f3e5f5; color: #7b1fa2;">🎯 ${Math.round((email.confidence || 0.8) * 100)}% confidence</span>
+                    ${email.importance === 'high' ? '<span class="tag" style="background: #ffebee; color: #d32f2f;">🔥 High Priority</span>' : ''}
+                    ${email.priority === 'high' ? '<span class="tag" style="background: #ffebee; color: #d32f2f;">⚡ High Priority</span>' : ''}
+                    ${email.sentiment ? `<span class="tag" style="background: #e8f5e8; color: #2e7d32;">😊 ${email.sentiment}</span>` : ''}
+                    ${email.has_attachments ? '<span class="tag" style="background: #fff3e0; color: #f57c00;">📎 Attachments</span>' : ''}
+                </div>
+                <div class="item-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button onclick="viewEmailDetails('${email.message_id || email.id || ''}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">👁️ View Details</button>
+                    <button onclick="copyEmailInfo('${email.subject || ''}', '${email.sender || ''}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">📋 Copy Info</button>
+                    ${email.gmail_url ? `<button onclick="openGmailLink('${email.gmail_url}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">🔗 Open in Gmail</button>` : ''}
+                </div>
+            `;
+            
+            // Add hover effects
+            emailDiv.addEventListener('mouseenter', () => {
+                emailDiv.style.transform = 'translateY(-2px)';
+                emailDiv.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            });
+            
+            emailDiv.addEventListener('mouseleave', () => {
+                emailDiv.style.transform = 'translateY(0)';
+                emailDiv.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            });
+            
+            return emailDiv;
+        }
+
+        function createEventElement(event) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'item';
+            eventDiv.style.cursor = 'pointer';
+            eventDiv.style.transition = 'all 0.2s ease';
+            
+            // Create readable date and time
+            const startDate = new Date(event.start_time || event.start || Date.now());
+            const endDate = new Date(event.end_time || event.end || startDate);
+            const formattedStart = startDate.toLocaleDateString() + ' ' + startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const formattedEnd = endDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Calculate duration
+            const durationMs = endDate.getTime() - startDate.getTime();
+            const durationMinutes = Math.round(durationMs / (1000 * 60));
+            
+            // Truncate description for better display
+            const description = (event.description || 'No description available');
+            const truncatedDescription = description.length > 150 ? description.substring(0, 150) + '...' : description;
+            
+            eventDiv.innerHTML = `
+                <div class="item-title">📅 ${event.title || 'No Title'}</div>
+                <div class="item-meta">
+                    <span><strong>Start:</strong> ${formattedStart}</span>
+                    <span><strong>End:</strong> ${formattedEnd}</span>
+                    <span><strong>Duration:</strong> ${durationMinutes || event.duration_minutes || 60} minutes</span>
+                    ${event.location ? `<span><strong>Location:</strong> ${event.location}</span>` : ''}
+                </div>
+                <div class="item-preview" style="margin: 1rem 0; color: #666; line-height: 1.4;">
+                    ${truncatedDescription}
+                </div>
+                <div class="item-tags">
+                    <span class="tag" style="background: #f3e5f5; color: #7b1fa2;">📂 ${event.category || 'uncategorized'}</span>
+                    ${event.location ? `<span class="tag" style="background: #e8f5e8; color: #2e7d32;">📍 ${event.location}</span>` : ''}
+                    ${event.priority === 'high' ? '<span class="tag" style="background: #ffebee; color: #d32f2f;">⚡ High Priority</span>' : ''}
+                    ${event.attendees_count ? `<span class="tag" style="background: #fff3e0; color: #f57c00;">👥 ${event.attendees_count} attendees</span>` : ''}
+                    ${event.confidence ? `<span class="tag" style="background: #f3e5f5; color: #7b1fa2;">🎯 ${Math.round(event.confidence * 100)}% confidence</span>` : ''}
+                    ${event.is_recurring ? '<span class="tag" style="background: #e3f2fd; color: #1976d2;">🔁 Recurring</span>' : ''}
+                </div>
+                <div class="item-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button onclick="viewEventDetails('${event.event_id || event.id || ''}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">👁️ View Details</button>
+                    <button onclick="copyEventInfo('${event.title || ''}', '${formattedStart}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">📋 Copy Info</button>
+                    ${event.calendar_url ? `<button onclick="openCalendarLink('${event.calendar_url}')" style="padding: 0.25rem 0.75rem; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer; font-size: 0.85rem;">🔗 Open in Calendar</button>` : ''}
+                </div>
+            `;
+            
+            // Add hover effects
+            eventDiv.addEventListener('mouseenter', () => {
+                eventDiv.style.transform = 'translateY(-2px)';
+                eventDiv.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+            });
+            
+            eventDiv.addEventListener('mouseleave', () => {
+                eventDiv.style.transform = 'translateY(0)';
+                eventDiv.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.1)';
+            });
+            
+            return eventDiv;
+        }
+
+        function showCategories() {
+            document.getElementById('categories-section').classList.remove('hidden');
+            document.getElementById('content-view').classList.add('hidden');
+        }
+
+        function showContentView() {
+            document.getElementById('categories-section').classList.add('hidden');
+            document.getElementById('content-view').classList.remove('hidden');
+        }
+
+        function showProcessing() {
+            document.getElementById('processing-section').classList.remove('hidden');
+        }
+
+        function hideProcessing() {
+            document.getElementById('processing-section').classList.add('hidden');
+        }
+
+        function updateProcessingStatus(message, percentage) {
+            document.getElementById('status-message').textContent = message;
+            document.getElementById('progress-fill').style.width = `${percentage}%`;
+        }
+
+        // Action Modals
+        function showScheduleEventModal(category = '') {
+            const modal = createModal('Schedule Event', `
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="event-title" class="form-control" placeholder="Meeting title">
+                </div>
+                <div class="form-group">
+                    <label>Start Time *</label>
+                    <input type="datetime-local" id="event-start" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>End Time</label>
+                    <input type="datetime-local" id="event-end" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="event-category" class="form-control">
+                        ${generateCategoryOptions(category)}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="event-description" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="event-location" class="form-control" placeholder="Meeting location">
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="submitScheduleEvent()" class="btn">📅 Schedule Event</button>
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+
+        function showCreateNoteModal(category = '') {
+            const modal = createModal('Create Note', `
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="note-title" class="form-control" placeholder="Note title (auto-generated if empty)">
+                </div>
+                <div class="form-group">
+                    <label>Content *</label>
+                    <textarea id="note-content" class="form-control" rows="6" placeholder="Write your note content here..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="note-category" class="form-control">
+                        ${generateCategoryOptions(category)}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tags (comma-separated)</label>
+                    <input type="text" id="note-tags" class="form-control" placeholder="tag1, tag2, tag3">
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="submitCreateNote()" class="btn">📝 Create Note</button>
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+
+        function showCreateAutomationModal() {
+            const modal = createModal('Create Email Automation', `
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="automation-category" class="form-control">
+                        ${generateCategoryOptions()}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Automation Type *</label>
+                    <select id="automation-type" class="form-control">
+                        <option value="auto_respond">Auto Respond</option>
+                        <option value="smart_filing">Smart Filing</option>
+                        <option value="priority_flagging">Priority Flagging</option>
+                        <option value="reminder_scheduling">Reminder Scheduling</option>
+                    </select>
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="submitCreateAutomation()" class="btn">🤖 Create Automation</button>
+                    <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+
+        function generateCategoryOptions(selectedCategory = '') {
+            const categories = Object.keys(unifiedCategories);
+            let options = '<option value="">Select category</option>';
+            
+            categories.forEach(category => {
+                const selected = category === selectedCategory ? 'selected' : '';
+                options += `<option value="${category}" ${selected}>${getCategoryEmoji(category)} ${category}</option>`;
+            });
+            
+            return options;
+        }
+
+        async function submitScheduleEvent() {
+            const title = document.getElementById('event-title').value;
+            const startTime = document.getElementById('event-start').value;
+            const endTime = document.getElementById('event-end').value;
+            const category = document.getElementById('event-category').value;
+            const description = document.getElementById('event-description').value;
+            const location = document.getElementById('event-location').value;
+
+            if (!title || !startTime) {
+                showAlert('❌ Title and start time are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await makeAuthenticatedRequest('/api/agents/schedule_event', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        start_time: startTime,
+                        end_time: endTime,
+                        category,
+                        description,
+                        location
+                    })
+                });
+
+                if (response.success) {
+                    closeModal();
+                    showAlert(`✅ Event "${title}" scheduled successfully!`, 'success');
+                    await loadUnifiedCategories();
+                }
+            } catch (error) {
+                showAlert(`❌ Failed to schedule event: ${error.message}`, 'error');
+            }
+        }
+
+        async function submitCreateNote() {
+            const title = document.getElementById('note-title').value;
+            const content = document.getElementById('note-content').value;
+            const category = document.getElementById('note-category').value;
+            const tagsText = document.getElementById('note-tags').value;
+
+            if (!content) {
+                showAlert('❌ Note content is required', 'error');
+                return;
+            }
+
+            const tags = tagsText ? tagsText.split(',').map(tag => tag.trim()).filter(Boolean) : [];
+
+            try {
+                const response = await makeAuthenticatedRequest('/api/agents/create_note', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        content,
+                        category,
+                        tags
+                    })
+                });
+
+                if (response.success) {
+                    closeModal();
+                    showAlert(`✅ Note "${response.note.title}" created successfully!`, 'success');
+                }
+            } catch (error) {
+                showAlert(`❌ Failed to create note: ${error.message}`, 'error');
+            }
+        }
+
+        async function submitCreateAutomation() {
+            const category = document.getElementById('automation-category').value;
+            const automationType = document.getElementById('automation-type').value;
+
+            if (!category || !automationType) {
+                showAlert('❌ Category and automation type are required', 'error');
+                return;
+            }
+
+            try {
+                const response = await makeAuthenticatedRequest('/api/emails/automation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        category,
+                        automation_type: automationType
+                    })
+                });
+
+                if (response.success) {
+                    closeModal();
+                    showAlert(`✅ Automation created for ${category} category!`, 'success');
+                }
+            } catch (error) {
+                showAlert(`❌ Failed to create automation: ${error.message}`, 'error');
+            }
+        }
+
+        async function revokeConsent(type) {
+            const confirmMessage = type === 'all' 
+                ? '⚠️ This will permanently delete ALL categorized data (emails and calendar). You will remain logged in. Are you sure?'
+                : `⚠️ This will permanently delete all ${type} categorizations. You will remain logged in. Are you sure?`;
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            try {
+                // Prepare request with multiple authentication methods
+                const requestBody = { 
+                    consent_type: type,
+                    authorization: authToken ? `Bearer ${authToken}` : null
+                };
+                
+                // Also try to include current user info if available
+                if (currentUser) {
+                    requestBody.user_id = currentUser.user_id || currentUser.id;
+                }
+                
+                const response = await makeAuthenticatedRequest('/api/consent/revoke', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.success) {
+                    // Clear the categories from UI
+                    unifiedCategories = {};
+                    renderUnifiedCategories();
+                    
+                    // Show success message with details
+                    const clearedItems = Object.keys(response.revoked_data || {}).join(' and ');
+                    showAlert(`✅ Successfully cleared ${clearedItems || type} data!`, 'success');
+                    
+                    // Refresh categories to show empty state
+                    await loadUnifiedCategories();
+                } else {
+                    showAlert(`❌ Failed to revoke consent: ${response.message || 'Unknown error'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Consent revocation error:', error);
+                
+                // If authentication failed, try a direct fetch without authentication
+                if (error.message.includes('Authentication') || error.message.includes('401') || error.message.includes('403')) {
+                    try {
+                        showAlert('⚠️ Trying fallback consent revocation...', 'warning');
+                        
+                        const fallbackResponse = await fetch(`${API_BASE}/api/consent/revoke`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                consent_type: type,
+                                user_id: currentUser?.user_id || currentUser?.id || 'fallback_user'
+                            })
+                        });
+                        
+                        if (fallbackResponse.ok) {
+                            const result = await fallbackResponse.json();
+                            if (result.success) {
+                                unifiedCategories = {};
+                                renderUnifiedCategories();
+                                const clearedItems = Object.keys(result.revoked_data || {}).join(' and ');
+                                showAlert(`✅ Successfully cleared ${clearedItems || type} data!`, 'success');
+                                await loadUnifiedCategories();
+                                return;
+                            }
+                        }
+                    } catch (fallbackError) {
+                        console.error('Fallback revocation also failed:', fallbackError);
+                    }
+                    
+                    showAlert('⚠️ Please sign in again to revoke consent', 'error');
+                } else {
+                    showAlert(`❌ Failed to revoke consent: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        function scheduleEventForCategory(category) {
+            showScheduleEventModal(category);
+        }
+
+        function createNoteForCategory(category) {
+            showCreateNoteModal(category);
+        }
+
+        function showCategoryActions(category) {
+            const modal = createModal(`${getCategoryEmoji(category)} ${category} Actions`, `
+                <div style="text-align: center;">
+                    <div style="margin: 1rem 0;">
+                        <button onclick="scheduleEventForCategory('${category}'); closeModal();" class="btn">📅 Schedule Event</button>
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <button onclick="createNoteForCategory('${category}'); closeModal();" class="btn">📝 Create Note</button>
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <button onclick="createAutomationForCategory('${category}'); closeModal();" class="btn">🤖 Create Automation</button>
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <button onclick="closeModal()" class="btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            `);
+            document.body.appendChild(modal);
+        }
+
+        function createAutomationForCategory(category) {
+            showCreateAutomationModal();
+            // Pre-select the category
+            setTimeout(() => {
+                const select = document.getElementById('automation-category');
+                if (select) select.value = category;
+            }, 100);
+        }
+
+        function createModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal">
+                    <h3 style="margin-bottom: 1.5rem;">${title}</h3>
+                    ${content}
+                </div>
+            `;
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            return modal;
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) modal.remove();
+        }
+
+        function getCategoryEmoji(category) {
+            const emojis = {
+                work: '💼',
+                finance: '💰',
+                personal: '👤',
+                shopping: '🛒',
+                newsletter: '📰',
+                travel: '✈️',
+                health: '🏥',
+                education: '📚',
+                social: '👥',
+                entertainment: '🎬',
+                meetings: '🤝',
+                documentation: '📋',
+                communication: '💬',
+                scheduling: '📅',
+                uncategorized: '📁'
+            };
+            return emojis[category] || '📁';
+        }
+
+        function logout() {
+            localStorage.removeItem('jwt_token');
+            localStorage.removeItem('user_email');
+            authToken = null;
+            currentUser = null;
+            unifiedCategories = {};
+            
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('nav-section').classList.add('hidden');
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+        }
+
+        async function makeAuthenticatedRequest(endpoint, options = {}) {
+            if (!authToken) {
+                throw new Error('No authentication token available');
+            }
+            
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+            
+            const response = await fetch(`${API_BASE}${endpoint}`, config);
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                    throw new Error('Authentication expired. Please sign in again.');
+                }
+                throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+            }
+            
+            return response.json();
+        }
+
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} fade-in`;
+            alert.textContent = message;
+            alert.style.position = 'fixed';
+            alert.style.top = '20px';
+            alert.style.right = '20px';
+            alert.style.zIndex = '1001';
+            alert.style.maxWidth = '400px';
+            
+            document.body.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // Handle OAuth callback
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('token')) {
+            authToken = urlParams.get('token');
+            const email = urlParams.get('email');
+            
+            localStorage.setItem('jwt_token', authToken);
+            localStorage.setItem('user_email', email);
+            
+            window.history.replaceState({}, document.title, window.location.pathname);
+            
+            currentUser = { email };
+            showMainInterface();
+            loadUnifiedCategories();
+        }
+
+        // Filtering functions
+        let allContentItems = []; // Store all items for filtering
+        
+        function applyFilters() {
+            const typeFilter = document.getElementById('type-filter').value;
+            const dateFilter = document.getElementById('date-filter').value;
+            const priorityFilter = document.getElementById('priority-filter').value;
+            const searchFilter = document.getElementById('search-filter').value.toLowerCase();
+            
+            const contentList = document.getElementById('content-list');
+            const allItems = contentList.querySelectorAll('.item');
+            
+            allItems.forEach(item => {
+                let shouldShow = true;
+                
+                // Type filter
+                if (typeFilter !== 'all') {
+                    const isEmail = item.querySelector('.item-title').textContent.includes('📧');
+                    const isEvent = item.querySelector('.item-title').textContent.includes('📅');
+                    
+                    if (typeFilter === 'emails' && !isEmail) shouldShow = false;
+                    if (typeFilter === 'events' && !isEvent) shouldShow = false;
+                }
+                
+                // Priority filter
+                if (priorityFilter !== 'all') {
+                    const hasPriority = item.innerHTML.includes('High Priority');
+                    if (priorityFilter === 'high' && !hasPriority) shouldShow = false;
+                    if (priorityFilter === 'normal' && hasPriority) shouldShow = false;
+                }
+                
+                // Search filter
+                if (searchFilter) {
+                    const itemText = item.textContent.toLowerCase();
+                    if (!itemText.includes(searchFilter)) shouldShow = false;
+                }
+                
+                // Date filter (basic implementation)
+                if (dateFilter !== 'all') {
+                    // This would need more sophisticated date parsing
+                    // For now, just show all items
+                }
+                
+                item.style.display = shouldShow ? 'block' : 'none';
+            });
+            
+            // Update count
+            const visibleItems = contentList.querySelectorAll('.item:not([style*="display: none"])');
+            const title = document.getElementById('content-title');
+            const originalTitle = title.textContent.split(' (')[0];
+            title.textContent = `${originalTitle} (${visibleItems.length} items shown)`;
+            
+            showNotification(`🔍 Applied filters - ${visibleItems.length} items shown`, 'info');
+        }
+        
+        function clearFilters() {
+            document.getElementById('type-filter').value = 'all';
+            document.getElementById('date-filter').value = 'all';
+            document.getElementById('priority-filter').value = 'all';
+            document.getElementById('search-filter').value = '';
+            
+            const contentList = document.getElementById('content-list');
+            const allItems = contentList.querySelectorAll('.item');
+            
+            allItems.forEach(item => {
+                item.style.display = 'block';
+            });
+            
+            // Restore original title
+            if (currentCategory && unifiedCategories[currentCategory]) {
+                const categoryData = unifiedCategories[currentCategory];
+                document.getElementById('content-title').textContent = `${getCategoryEmoji(currentCategory)} ${currentCategory} (${categoryData.total} items)`;
+            }
+            
+            showNotification('🔄 Filters cleared', 'info');
+        }
+
+        // Email interaction functions
+        function viewEmailDetails(messageId) {
+            alert(`Email Details:\nMessage ID: ${messageId}\n\nFull email details would be displayed in a modal or separate view.`);
+        }
+
+        function copyEmailInfo(subject, sender) {
+            const info = `Subject: ${subject}\nFrom: ${sender}`;
+            navigator.clipboard.writeText(info).then(() => {
+                showNotification('📋 Email info copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('❌ Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function openGmailLink(url) {
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                showNotification('❌ Gmail link not available', 'error');
+            }
+        }
+
+        // Event interaction functions
+        function viewEventDetails(eventId) {
+            alert(`Event Details:\nEvent ID: ${eventId}\n\nFull event details would be displayed in a modal or separate view.`);
+        }
+
+        function copyEventInfo(title, start) {
+            const info = `Event: ${title}\nStart: ${start}`;
+            navigator.clipboard.writeText(info).then(() => {
+                showNotification('📋 Event info copied to clipboard!', 'success');
+            }).catch(() => {
+                showNotification('❌ Failed to copy to clipboard', 'error');
+            });
+        }
+
+        function openCalendarLink(url) {
+            if (url) {
+                window.open(url, '_blank');
+            } else {
+                showNotification('❌ Calendar link not available', 'error');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            `;
+            
+            // Set background color based on type
+            switch (type) {
+                case 'success': notification.style.background = '#4caf50'; break;
+                case 'error': notification.style.background = '#f44336'; break;
+                case 'warning': notification.style.background = '#ff9800'; break;
+                default: notification.style.background = '#2196f3';
+            }
+            
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS animations
+        if (!document.getElementById('notification-styles')) {
+            const style = document.createElement('style');
+            style.id = 'notification-styles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
