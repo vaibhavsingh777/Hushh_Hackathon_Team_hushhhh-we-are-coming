@@ -1,6 +1,6 @@
-# Hushh PDA Frontend
+# Smart Data Categorizer Frontend Dashboard
 
-Simple, clean frontend for the Hushh MCP Personal Data Assistant.
+Interactive dashboard for the Smart Data Categorizer & Automation Engine with real-time processing updates.
 
 ## Setup
 
@@ -23,11 +23,13 @@ npx serve -p 3000
 
 ## Features
 
-- 🔐 Google OAuth authentication
-- 📧 Email processing with AI analysis
-- 📅 Calendar processing with productivity insights
-- 🎯 Clean, responsive design
-- ⚡ Fast and lightweight
+- 🔐 Google OAuth authentication with secure session management
+- 🧠 AI-powered email categorization with multi-LLM support
+- � Smart calendar processing with scheduling intelligence
+- � Real-time processing dashboard with live progress updates
+- 📈 Comprehensive categorization analytics and insights
+- 🛡️ Privacy controls with instant data deletion
+- ⚡ Fast, responsive design with clean UX
 
 ## API Integration
 

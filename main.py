@@ -1,8 +1,8 @@
-# Hushh MCP Personal Digital Assistant - Backend API
-# Built by Team "We Are Coming" for Hushh Hackathon
+# Smart Data Categorizer & Automation Engine - Hushh MCP Backend
+# Built by Team "We Are Coming" for Hushh Hackathon 2025
 # 
-# A privacy-first Personal Digital Assistant implementing the complete
-# Hushh Model Context Protocol (MCP) with AI-powered categorization,
+# An intelligent data categorization and automation system implementing the complete
+# Hushh Model Context Protocol (MCP) with AI-powered content analysis,
 # consent management, and encrypted data storage.
 #
 # Team Members:
@@ -11,14 +11,14 @@
 # - Rohit Gupta - Frontend Development & UX Design
 # - Udit - Data Privacy & Compliance
 #
-# Key Features:
-# - Privacy-by-design architecture with user-controlled data
-# - Multi-LLM AI processing (Ollama, OpenAI, Groq, Hugging Face)
+# Smart Data Categorizer Features:
+# - AI-powered email and calendar categorization with multi-LLM support
+# - Intelligent automation with smart content classification
 # - Complete Hushh MCP protocol implementation
 # - Real-time processing with background task management
-# - Granular consent management with instant data revocation
+# - Privacy-first architecture with granular consent management
 # - Encrypted vault storage with AES-256 encryption
-# - Comprehensive audit logging for compliance
+# - Comprehensive audit logging and compliance tracking
 # - Google OAuth integration for secure email/calendar access
 
 import asyncio
@@ -67,24 +67,26 @@ logger = logging.getLogger(__name__)
 
 # FastAPI Application Configuration
 app = FastAPI(
-    title="Hushh MCP Personal Digital Assistant", 
+    title="Smart Data Categorizer & Automation Engine", 
     description="""
-    🚀 **Privacy-First Personal Digital Assistant** built by Team "We Are Coming"
+    🚀 **Intelligent Data Categorization & Automation** built by Team "We Are Coming"
     
     **Complete Hushh MCP Protocol Implementation:**
-    ✅ Agent-based architecture with modular processing
-    ✅ Granular consent management with instant revocation  
+    ✅ AI-powered email and calendar categorization system
+    ✅ Multi-LLM integration (Ollama, OpenAI, Groq, Hugging Face)
+    ✅ Intelligent content classification and automation
+    ✅ Privacy-first architecture with granular consent management
+    ✅ Real-time processing with background task management
     ✅ Encrypted vault storage with user-controlled keys
-    ✅ Multi-LLM AI processing with confidence scoring
-    ✅ Real-time background processing with live updates
-    ✅ Comprehensive audit logging for privacy compliance
+    ✅ Comprehensive audit logging for compliance tracking
     ✅ Google OAuth integration for secure data access
     
-    **Hackathon Submission Features:**
-    - Privacy-by-design email and calendar processing
-    - AI-powered content categorization and insights
-    - Complete data deletion and consent revocation
-    - Responsive web dashboard with real-time updates
+    **Smart Categorization Features:**
+    - Advanced AI content analysis and classification
+    - Automated priority detection and sentiment analysis
+    - Smart scheduling intelligence and pattern recognition
+    - Real-time dashboard with live processing updates
+    - Complete data portability and consent revocation
     - Comprehensive test coverage (65+ automated tests)
     """,
     version="1.0.0",

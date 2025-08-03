@@ -1,50 +1,97 @@
-# 🔒 Hushh MCP Personal Digital Assistant (PDA)
+# 🤖 Smart Data Categorizer & Automation Engine
 
-A privacy-first Personal Digital Assistant built on the Model Context Protocol (MCP) that securely processes and categorizes your emails and calendar events using local AI.
+An intelligent data categorization and automation system built on the Hushh Model Context Protocol (MCP) that processes and categorizes your emails and calendar events using AI-powered content analysis.
 
-## 🌟 What This PDA Does
+## 🌟 What This System Does
 
-This Personal Digital Assistant provides intelligent categorization and analysis of your personal data while maintaining complete privacy and user control. Built following Hushh principles, it ensures your data never leaves your control.
+This Smart Data Categorizer provides intelligent content classification and automation for your personal data while maintaining complete privacy and user control. Built following Hushh MCP principles, it ensures your data never leaves your control.
 
 ### Core Features
 
-- **🔐 Privacy-First Email Processing**: Securely categorizes emails using local AI models
-- **📅 Intelligent Calendar Analysis**: Analyzes scheduling patterns and optimizes your time
-- **🤖 Local AI Categorization**: Uses Ollama and free LLM models for content analysis
-- **🛡️ Complete Data Control**: Full consent management and data deletion rights
-- **📊 Real-time Processing**: Live progress tracking with background processing
-- **🔄 Persistent Storage**: Encrypted storage that persists across sessions
-- **🌐 Google Integration**: Secure OAuth integration with Gmail and Google Calendar
+- **🧠 AI-Powered Content Classification**: Advanced categorization using multi-LLM support
+- **📧 Smart Email Analysis**: Intelligent email categorization with priority detection  
+- **📅 Calendar Intelligence**: Advanced scheduling pattern recognition and optimization
+- **🔄 Automated Processing**: Background task automation with real-time progress tracking
+- **🛡️ Privacy-First Architecture**: Complete consent management and data control
+- **� Encrypted Storage**: Secure vault storage that persists across sessions
+- **🌐 Seamless Integration**: OAuth integration with Gmail and Google Calendar
+- **📊 Real-time Dashboard**: Live processing updates with comprehensive insights
 
-## 🏗️ How It Works
+## 🏗️ System Architecture
 
-### 1. Privacy-First Architecture
+### 1. Agent-Based Processing Architecture
 ```
-User Data → Local Processing → Encrypted Storage → User Dashboard
-     ↓
-No External AI APIs (Optional Local Models Only)
+Data Sources → Processing Agents → AI Analysis → Categorized Output
+     ↓              ↓                 ↓              ↓
+Gmail/Calendar → Email/Calendar → Multi-LLM AI → Smart Categories
+                  Processors      Analysis      & Automation
 ```
 
 ### 2. Data Processing Flow
-1. **Consent Management**: User explicitly grants permissions for specific data types
-2. **Secure Data Fetching**: OAuth-protected access to Gmail/Calendar APIs
-3. **Local AI Analysis**: Content categorization using local Ollama models or free alternatives
-4. **Encrypted Storage**: All processed data stored with AES-256 encryption
-5. **User Dashboard**: Interactive visualization of categorized data
+1. **Consent Validation**: User explicitly grants permissions for specific data types
+2. **Secure Data Access**: OAuth-protected access to Gmail/Calendar APIs  
+3. **AI-Powered Analysis**: Content categorization using multiple LLM providers
+4. **Smart Classification**: Advanced priority detection and sentiment analysis
+5. **Automated Actions**: Intelligent automation based on content patterns
+4. **Encrypted Storage**: All processed data stored with AES-256 encryption in vault
+5. **User Dashboard**: Interactive visualization of categorized data and insights
 
 ### 3. Hushh MCP Protocol Compliance
-- ✅ **Consent Tokens**: Granular permission system for each data type
-- ✅ **Data Minimization**: Only processes data with explicit consent
-- ✅ **Local Processing**: AI analysis happens locally when possible
+- ✅ **Consent Tokens**: Granular permission system for each data type and operation
+- ✅ **Data Minimization**: Only processes data with explicit user consent
+- ✅ **Multi-LLM Processing**: AI analysis using Ollama, OpenAI, Groq, Hugging Face
 - ✅ **Audit Trails**: Complete logging of all data processing activities
 - ✅ **Right to Delete**: Complete data deletion and consent revocation
 - ✅ **Data Portability**: Export all processed data in standard formats
+
+## 🛠️ Technical Architecture
+
+### Core Components
+
+```
+hushh_mcp/
+├── agents/                    # Processing agents for data analysis
+│   ├── email_processor/       # Email categorization and analysis
+│   ├── calendar_processor/    # Calendar event processing
+│   └── audit_logger/          # Compliance and audit logging
+├── operons/                   # AI-powered analysis modules
+│   ├── categorize_content.py  # Multi-LLM categorization engine
+│   ├── content_classification.py # Advanced content analysis
+│   ├── privacy_audit.py       # Data sensitivity assessment
+│   └── scheduling_intelligence.py # Smart calendar optimization
+├── vault/                     # Encrypted storage system
+│   ├── storage.py            # Core vault functionality
+│   └── persistent_storage.py # Data persistence layer
+├── consent/                   # Consent management system
+└── integrations/             # External service integrations
+    └── gmail_client.py       # Google OAuth and API integration
+```
+
+### Agent Architecture
+
+1. **Email Processor Agent** (`agents/email_processor/`)
+   - Fetches emails via Gmail API with pagination support
+   - AI-powered categorization using multiple LLM providers
+   - Priority detection and sentiment analysis
+   - Encrypted storage of processed results
+
+2. **Calendar Processor Agent** (`agents/calendar_processor/`)
+   - Google Calendar integration for event analysis
+   - Scheduling pattern recognition and optimization
+   - Meeting intelligence and productivity insights
+   - Smart automation suggestions
+
+3. **Audit Logger Agent** (`agents/audit_logger/`)
+   - Complete activity logging for compliance
+   - Privacy audit trail generation
+   - Consent validation and tracking
+   - Transparency reporting for users
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8+
-- Node.js 16+ (for frontend)
+- Node.js 16+ (for frontend dashboard)
 - Google OAuth credentials (for Gmail/Calendar integration)
 - Ollama (optional, for local AI processing)
 
@@ -53,7 +100,7 @@ No External AI APIs (Optional Local Models Only)
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd hushh2
+cd hushh
 ```
 
 2. **Install Python dependencies**
