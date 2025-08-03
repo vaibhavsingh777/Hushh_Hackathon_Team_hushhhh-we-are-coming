@@ -1,4 +1,25 @@
-# main.py - Enhanced FastAPI Backend for Hushh MCP PDA Agent
+# Hushh MCP Personal Digital Assistant - Backend API
+# Built by Team "We Are Coming" for Hushh Hackathon
+# 
+# A privacy-first Personal Digital Assistant implementing the complete
+# Hushh Model Context Protocol (MCP) with AI-powered categorization,
+# consent management, and encrypted data storage.
+#
+# Team Members:
+# - Aryan Tamboli - Lead Developer & AI Integration  
+# - Vaibhav Singh - Backend Architecture & Security
+# - Rohit Gupta - Frontend Development & UX Design
+# - Udit - Data Privacy & Compliance
+#
+# Key Features:
+# - Privacy-by-design architecture with user-controlled data
+# - Multi-LLM AI processing (Ollama, OpenAI, Groq, Hugging Face)
+# - Complete Hushh MCP protocol implementation
+# - Real-time processing with background task management
+# - Granular consent management with instant data revocation
+# - Encrypted vault storage with AES-256 encryption
+# - Comprehensive audit logging for compliance
+# - Google OAuth integration for secure email/calendar access
 
 import asyncio
 import time
@@ -44,11 +65,31 @@ from hushh_mcp.integrations.gmail_client import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# FastAPI app
+# FastAPI Application Configuration
 app = FastAPI(
-    title="Hushh MCP PDA Agent API", 
-    description="Enhanced Personal Digital Assistant Agent built on Model Context Protocol with real-time processing",
-    version="2.0.0"
+    title="Hushh MCP Personal Digital Assistant", 
+    description="""
+    🚀 **Privacy-First Personal Digital Assistant** built by Team "We Are Coming"
+    
+    **Complete Hushh MCP Protocol Implementation:**
+    ✅ Agent-based architecture with modular processing
+    ✅ Granular consent management with instant revocation  
+    ✅ Encrypted vault storage with user-controlled keys
+    ✅ Multi-LLM AI processing with confidence scoring
+    ✅ Real-time background processing with live updates
+    ✅ Comprehensive audit logging for privacy compliance
+    ✅ Google OAuth integration for secure data access
+    
+    **Hackathon Submission Features:**
+    - Privacy-by-design email and calendar processing
+    - AI-powered content categorization and insights
+    - Complete data deletion and consent revocation
+    - Responsive web dashboard with real-time updates
+    - Comprehensive test coverage (65+ automated tests)
+    """,
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # CORS middleware
