@@ -82,16 +82,7 @@ python -m http.server 3000
 - **Google OAuth credentials** (optional, for real Gmail/Calendar integration)
 - **Ollama** (optional, for local AI processing)
 
-### Installation & Configuration
 
-```bash
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Set up environment variables (optional)
-cp .env.example .env
-# Edit .env with your settings (Google OAuth, encryption keys, etc.)
-```
 
 ### System Access Points
 
